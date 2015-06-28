@@ -13,50 +13,44 @@ background music. Everything else was written during the 72 hours.
 
 The rules:
 
+_______________________________
+1. Seedlings
 
-Genre requirements
-Seedlings
+I think I'm following this pretty much to the letter.
 
-Your game must involve caring for something that, for better or worse, is under your guardianship.
+_____________________
+2. Text Interactivity
 
-Care for a garden, watch children in a daycare, mentor a mentee. The outcome of the game must revolve around the decisions you make and the guidance you give.
-Technical requirements
-There are two technical requirements:
+Annoying as it may be, the crucial aspects of the game are by typing
+in text strings.
 
-    Text Interactivity
+___________________
+3. Particle Madness
 
-    At some point you must interact with the game through written text, either free-form as in text adventures, or a dialog where the player can choose from pre-written responses.
+I have lots of particles (1024 to be exact, so more than the required
+500). Dust, sparkles, tears...
 
-    Selecting an option from a menu as part of a title or configuration screen does not count.
-    Particle Madness
+__________________
+4. Sound Annoyance
 
-    There must be a fairly large particle engine (>500 particles) somewhere in the game.
+While I absolutely hate that rule, I did implement it. First of all the
+game starts with the most obnoxious, clipped buzzer sound ever... but
+since it stops by itself to comply to the rules, the classroom will
+steadily get more and more noisy until you tell them to be quiet.
 
-    It does not need to serve any purpose.
+_______________________
+5. Physical Criminality
 
-Artistic requirements
-There are two artistic requirements:
+Well, a 2D platformer always is physical criminality (the way you jump,
+the impossible perspective, the 2D-ness) - but to not appear like I
+want a cheap cop out there also is genuine gravity reversion in the
+game (just get close to the monster...).
 
-    Sound Annoyance
+________________
+6. Act of Sequel
 
-    When a player is doing badly, play the most annoying sound ever heard* on a loop. Only doing better or forfeiting will cause the sound to stop.
+Much as I would have wished to get out of the sound rule - I did
+implement and it and so there was no need for the bonus rule.
 
-    * Actually, anything obnoxious will do.
-    Physical Criminality
-
-    Your game must have, and flamboyantly reject, an opportunity to obey the laws of physics. For example, you could distort space-time, invert gravity, make a world where it's impossible to create a perpetual motion machine that doesn't keep getting faster and faster, or simply decree that water is flammable. Bonus points if you can make your penchant for illegal behaviour an integral part of a fun game.
-
-Bonus rules
-There is one optional bonus rule:
-
-    Act of Sequel
-
-    Pick a game from any previous Speedhack competition and make a sequel to it! Pick up to two rules in this competition and replace them with rules from that year's competition.
-
-    The sequel must share some significant details with the original game: a continuation of the plot, the same characters, etc. It need not be the same genre.
-
-    The swapped rules must be in the same category. i.e., An artistic rule must be swapped with an artistic rule. Therefore, it is not possible to swap the Bonus rule for fear of creating a world ending paradox.
-
-    If invoking this rule, clearly state in the game's README which rules have been replaced.
 
 
