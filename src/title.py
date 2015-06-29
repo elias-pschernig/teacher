@@ -26,6 +26,11 @@ def title_draw:
     land_color(1, 0.9, 0, 1)
     land_font_set(game.large)
     land_print_center("Allefant")
+    land_font_set(game.small)
+    land_color(1, 0.5, 0, 1)
+    land_print_center("with musical and other help from andrea a.k.a.")
+    land_font_set(game.large)
+    land_print_center("AK")
 
     land_font_set(game.small)
     land_text_pos(10, 150)

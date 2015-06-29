@@ -46,7 +46,7 @@ def particle_sparkle(float x, y, int n):
         p.angle = land_rnd(0, 2 * pi)
         p.add = True
 
-def particle_tear(float x, y, int dx):
+def particle_tear(float x, y, int dx, dy, float ay):
     for int jn in range(1):
         int i = particle_n
         Particle *p = particles + i
@@ -57,9 +57,9 @@ def particle_tear(float x, y, int dx):
         p.t = tile_by_id(tile_by_name("tear"))
         p.end_time = game_global()->time + 90
         p.dx = dx
-        p.dy = -3
+        p.dy = dy
         p.ax = 0
-        p.ay = 0.1
+        p.ay = ay
         p.angle = 0
         p.add = True
 

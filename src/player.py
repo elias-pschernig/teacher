@@ -3,6 +3,7 @@ import map
 import game
 import tile
 import particle
+import music
 
 enum KidState:
     Wandering
@@ -246,6 +247,9 @@ static def kid_mind(Player *self, int *kx, *ky):
             self.state = land_rand(0, 3) == 0 ? Crying : Wandering
             if self.state == Crying:
                 self.attention_span = 600
+                land_sound_play(g.cry, 1, 0, 1)
+            else:
+                land_sound_play(g.laugh, 1, 0, land_rnd(1, 1.25))
     elif self.state == Stopping:
         if self.attention_span == 0:
             self.state = Wandering
@@ -277,9 +281,9 @@ static def kid_mind(Player *self, int *kx, *ky):
     elif self.state == Crying:
         Tile *pt = tile_by_id(self.tid)
         if g.time % 8 == 1:
-            particle_tear(self.x + 20, self.y + 256 - pt.tall + 20, -1)
+            particle_tear(self.x + 20, self.y + 256 - pt.tall + 20, -1, -gravity * 3, 0.1 * gravity)
         if g.time % 8 == 5:
-            particle_tear(self.x + 128 - 20, self.y + 256 - pt.tall + 20, 1)
+            particle_tear(self.x + 128 - 20, self.y + 256 - pt.tall + 20, 1, -gravity * 3, 0.1 * gravity)
     elif self.state == Dancing:
         if self.wy == 0: self.wy = -1
         if self.attention_span == 0:
@@ -323,8 +327,9 @@ static def monster_mind(Player *self, int *kx, int *ky):
     *kx = self.wx
     *ky = self.wy
 
-    if kid_distance(self, None, None) < 100:
+    if kid_distance(self, None, None) < 500:
         gravity = -1
+        music_play_tune_if_not(music_tune1)
 
 def player_collide(Player *self, int kx, ky, int who):
     if who == 2:
@@ -363,6 +368,8 @@ def player_input(Player *self, int kx, ky, int who):
     if who == 0 and mit:
         if mit.id == game.brick->id:
             gravity = 1
+            if music_current() != music_tune4:
+                music_play_tune_if_not(music_tune2)
     
     if not mit or not mit.climb:
         if self.jump or self.climbing or self.flying:

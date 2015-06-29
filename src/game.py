@@ -49,6 +49,8 @@ class Game:
     LandSound *knock 
     LandSound *toc
     LandSound *classroom
+    LandSound *laugh
+    LandSound *cry
 
     bool music
 
@@ -96,6 +98,8 @@ def init(LandRunner *runner):
     game.knock = land_sound_load("data/knock.ogg")
     game.toc = land_sound_load("data/toc.ogg")
     game.classroom = land_sound_load("data/classroom.ogg")
+    game.laugh = land_sound_load("data/laugh.ogg")
+    game.cry = land_sound_load("data/cry.ogg")
     game.command = land_strdup("")
     game.camera = camera_new(land_display_width(), land_display_height())
     game.map = map_create(128, 128, 128, 128)
@@ -126,6 +130,22 @@ def enter(LandRunner *runner):
 
 def tick(LandRunner *runner):
     if game.music:
+
+        if game.title:
+            music_play_tune_if_not(music_tune3)
+        else:
+            if game.kids[0]->state == Studying or game.kids[0]->state == Crazy:
+                music_play_tune_if_not(music_tune4)
+            else:
+                if music_current() == music_tune1:
+                    if music_repeats() >= 1:
+                        music_play_tune_if_not(music_tune3)
+                elif music_current() == music_tune2:
+                    if music_repeats() >= 1:
+                        music_play_tune_if_not(music_tune3)
+                else:
+                    music_play_tune_if_not(music_tune3)
+
         music_tick()
     if land_closebutton(): land_quit()
     if land_key_pressed(LandKeyEscape):
@@ -207,12 +227,13 @@ def tick(LandRunner *runner):
     game.noisy = 0
     int mini = -1
     float mind = 0
+    bool command_successful = False
     for int i in range(game.kids_count):
         Player *kid = game.kids[i]
         if kid.state == Sitting or kid.state == Studying or kid.state == Dancing:
             game.inclass++
         if kid.state == Sitting:
-            float v = 1 - kid.attention_span / 3600
+            float v = 1 - kid.attention_span / 3600.0
             if v < 0:
                 v = 0
             game.noisy += v
@@ -238,17 +259,17 @@ def tick(LandRunner *runner):
                 game.command[0] = f
             if land_equals(c, "follow"):
                 kid_command(kid, Following, named)
-                game.command[0] = 0
+                command_successful = True
             if land_equals(c, "stop"):
                 kid_command(kid, Stopping, named)
-                game.command[0] = 0
+                command_successful = True
             if land_equals(c, "sit"):
                 kid_command(kid, Sitting, named)
-                game.command[0] = 0
+                command_successful = True
             if land_equals(c, "quiet"):
                 if kid.state == Sitting:
                     kid.attention_span = 3600
-                    game.command[0] = 0
+                    command_successful = True
         player_input(kid, 0, 0, 1)
 
         if i == 0:
@@ -256,7 +277,9 @@ def tick(LandRunner *runner):
                 land_sound_loop(game.ring, 2, 0, 1)
             if kid.state == Crazy and kid.attention_span == 1:
                 land_sound_stop(game.ring)
-                music_play_tune(music_tune1)
+
+    if command_successful:
+        game.command[0] = 0
 
     if land_equals(game.command, "where are you?"):
         if mini != -1:
@@ -266,10 +289,10 @@ def tick(LandRunner *runner):
             kid.seen = True
         game.command[0] = 0
 
-    if game.noisy <= 5 and game.time < game.noisy_time:
+    if game.noisy < 5 and game.time < game.noisy_time:
         land_sound_stop(game.classroom)
         game.noisy_time = game.time
-    if game.noisy > 5 and game.time > game.noisy_time:
+    if game.noisy >= 5 and game.time > game.noisy_time:
         game.noisy_time = game.time + land_sound_seconds(game.classroom) * 60
         float v = game.noisy / 10.0
         if v > 1:
@@ -389,8 +412,10 @@ def draw(LandRunner *runner):
     land_color(1, 1, 1, 1)
     land_font_set(game.small)
     land_text_pos(0, 0)
+    float p = 100 * game.noisy / 10
+    if p > 100: p = 100
     land_print("kids in class: %2d/%d noise level: %.0f %%",
-        game.inclass, game.kids_count, 100 * game.noisy / game.kids_count)
+        game.inclass, game.kids_count, p)
 
     land_image_draw_scaled(game.ladder.pic, 240, 0, 0.125, 0.125)
     land_text_pos(240 + 16, 0)

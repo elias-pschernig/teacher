@@ -1,4 +1,4 @@
- ______              _               
+ ______              _      
 (_) |               | |              
     | _   __,   __  | |     _   ,_   
   _ ||/  /  |  /    |/ \   |/  /  |  
@@ -6,14 +6,32 @@
 
 Speedhack 2015 entry by Allefant (elias)
 
+_________
+Compiling
+
 To compile, compile c/*.c and c/land/land.c. land.c is my old collection
 of code snippets and was not written during speedhack. Also sound.c and
 music.c are from an older speedhack entry and used to synthesize the
 background music. Everything else was written during the 72 hours.
 
-The rules:
+_______
+Playing
 
-_______________________________
+The title screen should explain everything. The minimap will show your
+position as a white circle, the monster as a blue circle, nearby kids
+as flashing circles and otherwise their last known position as red
+circles.
+
+Asking "where are you?" will update the red circle of the closest kid
+anywhere on the map.
+
+Touching the monster will reverse gravity, going back to the classroom
+will restore it in that case.
+
+___________________
+The Speedhack rules
+
+____________
 1. Seedlings
 
 I think I'm following this pretty much to the letter.
@@ -35,7 +53,7 @@ __________________
 
 While I absolutely hate that rule, I did implement it. First of all the
 game starts with the most obnoxious, clipped buzzer sound ever... but
-since it stops by itself to comply to the rules, the classroom will
+since it stops by itself, to comply to the rules the classroom will
 steadily get more and more noisy until you tell them to be quiet.
 
 _______________________

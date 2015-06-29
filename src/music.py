@@ -53,8 +53,59 @@ T: Allefant Song
 M: 2/4
 L: 1/8
 K: Am
-|: "Am" A2 ^A2 B2 "F" c3d1c4z2 | "Am"A2^A2B2 "F" c3d1c4z2 | "F" f2c2A2F2 "C"  F2E1G3z2 | "C" ^A2G2G2 "F" E1 F7z2 :|
-|: "C" E2 G2 c1 "F" x1 B4 A2 F2 z2 | "Bdim" D2F2B2 "C" A4G2E2 z2 :|
+| "Am" A2 ^A2 B2 "F" c3d1c4z2 | "Am"A2^A2B2 "F" c3d1c4z2 | "F" f2c2A2F2 "C"  F2E1G3z2 | "C" ^A2G2G2 "F" E1 F7z2
+| "Am" A2 ^A2 B2 "F" c3d1c4z2 | "Am"A2^A2B2 "F" c3d1c4z2 | "F" f2c2A2F2 "C"  F2E1G3z2 | "C" ^A2G2G2 "F" E1 F7z2
+| "C" E2 G2 c1 "F" x1 B4 A2 F2 z2 | "Bdim" D2F2B2 "C" A4G2E2 z2
+| "C" E2 G2 c1 "F" x1 B4 A2 F2 z2 | "Bdim" D2F2B2 "C" A4G2E2 z2
+"""
+
+global char const *music_tune2 = """
+X:1
+T:Alphabet Song
+T:(Twinkle, Twinkle Little Star)
+C:Traditional Kid's Song
+M:4/4
+L:1/4
+Q:1/4=100
+K:D
+|"D"D D A A|"G"B B "D"A2|"G"G G "D"F F|"A"E/2E/2E/2E/2 "D"D2|A A "G"G G|"D"F F "A"E2|"D"A A "G"G G|"D"F F "A"E2
+"D"D   D    A    A|"G"B B "D"A2|"G"G    G "D"F    F|"A"E     E "D"D2|
+"""
+
+global char const *music_tune3 = """
+X: 1
+T: Sasha  [Dm]
+O: Russia
+B: "Ska' Vi Danse", Claus Jørgensen (Edition Wilhelm Hansen, Copenhagen)
+M: 2/4
+L: 1/8
+K: Dm
+| "Dm"AA z2 | AA z2 | "A7"A2 A2 | A2 z2
+| "Dm"AA AF | AA AF | "A7"EE A>G | "Dm"FD D2
+| "Dm"AA AF | AA AF | "A7"EE A>G | "Dm"FD D2
+| "Gm"B2 B2 | "Dm"A2 A2 | "A7"AG FE | "Dm"D2 D2
+| "Gm"B2 B2 | "Dm"A2 A2 | "A7"AG FE | "Dm"D2 D2
+K:D
+| "D"F2 A2 | d3 c | dc BA | "Em"G3 F | "A7"E2 G2 | c3 B |cB AG | "D"F3 E
+| "D"F2 A2 | d3 c | dc BA | "Em"G3 F | "A7"E2 G2 | c3 B |"A7"cA Bc | "D"d2 d2
+"""
+
+global char const *music_tune4 = """
+X:1001
+T:Aiken Drum
+T:Willie Wood
+T:There's a Man Came to our Town
+R:Reel
+C:Trad. Before 1820
+O:Scotland
+M:4/4
+L:1/8
+Q:1/4=140
+K:D
+|"D"f2 f2 gfed|"G"B4 d3 B|"D"A3 B d2 A2|"E7"f2 e2 "A7"e2 de|"D"f2 f2 gfed|"G"B4 d3 B|"A7"A2 A2 B2 c2|"D"d6 de
+|"D"f2 f2 gfed|"G"B4 d3 B|"D"A3 B d2 A2|"E7"f2 e2 "A7"e2 de|"D"f2 f2 gfed|"G"B4 d3 B|"A7"A2 A2 B2 c2|"D"d6 de
+|"D"f2 f2 f2 ed|"G"g2 g2 b3 g|"D"f2 a2 f2 d2|"Em"f2 e2 "A7"e2 de|"D"f2 f2 gfed|"G"B4 d3 B|"A7"A2 A2 B2 c2|"D"d6 de
+|"D"f2 f2 f2 ed|"G"g2 g2 b3 g|"D"f2 a2 f2 d2|"Em"f2 e2 "A7"e2 de|"D"f2 f2 gfed|"G"B4 d3 B|"A7"A2 A2 B2 c2|"D"d6 de
 """
 
 static LandStream *stream
@@ -438,8 +489,11 @@ int def mix_note(NotesPlayer *player, Envelope *e, Note *note, int16_t *b, int c
     return 0
 
 static int start = 0
+static int repeats = 0
+static char const *current
 
 def music_play_tune(char const *tune):
+    current = tune
     NotesPlayer *player = &global_player
     
     player->highest_index = 0
@@ -451,6 +505,11 @@ def music_play_tune(char const *tune):
     player->sample_pos = 0
     
     start = land_get_ticks()
+    repeats = 0
+
+def music_play_tune_if_not(char const *tune):
+    if tune == current: return
+    music_play_tune(tune)
 
 def music_tick():
 
@@ -476,6 +535,7 @@ def music_tick():
         player->oldest_active_note = player->first_note
         player->sample_pos = 0
         start = land_get_ticks()
+        repeats++
 
     Envelope e = {
         .attack = 0.025,
@@ -509,3 +569,9 @@ def music_tick():
 int def music_ticks():
     if not current_tune: return 0
     return land_get_ticks() - start
+
+def music_repeats -> int:
+    return repeats
+
+def music_current -> char const *:
+    return current
