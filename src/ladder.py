@@ -23,7 +23,7 @@ def ladder_create -> Tile*:
             float red = 1 - y / 20.0
             float green = 0.9 - y / 20.0
             float blue = 0
-            for int i in range(8):
+            for int i in range(4):
                 rgba_color(red, green, blue, p + 4 * w * i * 32)
 
     Bumpmap *bumpmap = bumpmap_create(w, h)
